@@ -1,3 +1,4 @@
+
 import os
 import numpy as np
 from PIL import Image,ImageFont,ImageDraw
@@ -9,7 +10,7 @@ from scipy.spatial import distance
 
 model_path='./data/model/facenet_keras.h5'
 face_cascade_path='./data/cascade/haarcascade_frontalface_default.xml'
-font_path='../data/font/Calibri Regular.ttf'
+font_path='./data/font/Calibri Regular.ttf'
 embedding_path='./data/arrays/embeddings.npz'
 vars_path='./data/arrays/vars.npz'
 
@@ -23,14 +24,10 @@ slope,intercept=loaded_vars['a'],loaded_vars['b']
 
 os.system('cls')
 print("\n\n\nKeep the images in './test/' directory.")
-input("Press ENTER when you're ready.")
 
 
-os.chdir('./test/')
-dr=os.listdir()
-dr.remove('predicted')
-for c in dr:
-    frame=cv2.imread(c)
+
+def myfunc(frame,c):
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     faces=face_cascade.detectMultiScale(gray,scaleFactor=1.2,minNeighbors=10)
     
@@ -55,7 +52,7 @@ for c in dr:
         else:
             font_size=int(0.1974311*((w_face+2*dw)//3)*2+0.03397702412218706)
             
-        font=ImageFont.truetype(font_path,font_size)
+        font = ImageFont.load_default()
         size=font.getsize(name)
 
         cv2.rectangle(frame,
@@ -76,5 +73,5 @@ for c in dr:
         frame=np.array(img)
 
     frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-    plt.imsave('./predicted/'+c,frame)
+    cv2.imwrite('test/predicted/'+str(c)+'.jpg',frame)
 print("\n\n\nOutputs can be found in './test/predicted/'")
